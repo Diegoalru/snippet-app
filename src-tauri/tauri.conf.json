@@ -28,7 +28,7 @@
       "fs": {
         "copyFile": false,
         "createDir": false,
-        "exists": false,
+        "exists": true,
         "readDir": true,
         "readFile": true,
         "removeDir": false,
@@ -36,7 +36,7 @@
         "renameFile": false,
         "writeFile": true,
         "scope": [
-          "$DOCUMENT/*/**"
+          "$DOCUMENT/**/*"
         ]
       }
     },
