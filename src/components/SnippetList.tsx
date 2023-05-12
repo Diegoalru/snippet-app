@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { BaseDirectory, readDir } from "@tauri-apps/api/fs";
 import { useSnippetStore } from "../store/SnippetStore";
+import SnippetItem from "./SnippetItem";
 
 function SnippetList() {
   const setSnippetsName = useSnippetStore((state) => state.setSnippetsName);
@@ -23,12 +24,10 @@ function SnippetList() {
 
   return (
     <div>
-      <h1 className="text-center">FILES</h1>
-      <ul>
+      <h1 className="text-center text-xl font-bold">FILES</h1>
         {snippetNames.map((name) => (
-          <li key={name}>{name}</li>
+          <SnippetItem snippetName={name} />
         ))}
-      </ul>
     </div>
   )
 }
