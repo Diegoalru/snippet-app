@@ -1,27 +1,61 @@
 import { useSnippetStore } from "../store/SnippetStore";
+import { readTextFile, removeFile } from "@tauri-apps/api/fs";
+import { documentDir } from "@tauri-apps/api/path";
 import { twMerge } from "tailwind-merge";
+import { FiTrash } from "react-icons/fi"
 
 interface Props {
   snippetName: string;
 }
 
+async function removeSnippet(snippetName: string) {
+  const accepted = await new Promise((resolve) => {
+    const response = window.confirm(
+      `Are you sure you want to delete ${snippetName}?`
+    );
+    resolve(response);
+  });
+
+  if (!accepted) {
+    return;
+  }
+
+  const getDir = await documentDir();
+  await removeFile(`${getDir}/tauriDocs/${snippetName}`);
+}
+
 function SnippetItem({ snippetName }: Props) {
+  
+  const selectedSnippet = useSnippetStore((state) => state.selectedSnippet);
   const setSelectedSnipped = useSnippetStore(
     (state) => state.setSelectedSnippet!
   );
-  const selectedSnippet = useSnippetStore((state) => state.selectedSnippet);
+  const removeSnippet = useSnippetStore((state) => state.removeSnippet);
+
 
   return (
     <div
       className={twMerge(
-        "py-2 px-4 hover:bg-neutral-900 hover:cursor-pointer",
-        selectedSnippet === snippetName ? "bg-sky-500" : ""
+        "py-2 px-4 hover:bg-neutral-900 hover:cursor-pointer hover:shadow-xl hover:border hover:border-sky-500 hover:rounded-lg transition duration-300 ease-in-out",
+        selectedSnippet?.name === snippetName
+          ? "bg-sky-500 transition duration-300 ease-in-out rounded-lg shadow-xl"
+          : ""
       )}
-      onClick={() => {
-        setSelectedSnipped(snippetName);
+      onClick={async () => {
+        const getDir = await documentDir();
+        const snippetText = await readTextFile(
+          `${getDir}/tauriDocs/${snippetName}`
+        );
+        setSelectedSnipped({ name: snippetName, code: snippetText });
       }}
     >
-      <h1 className="text-lg font-semibold">{snippetName}</h1>
+      <div className="flex">
+        <h1 className="text-lg font-semibold">{snippetName}</h1>
+        <FiTrash
+          className="ml-auto text-sm hover:text-red-500 hover:cursor-pointer transition duration-300 ease-in-out"
+          onClick={() => removeSnippet(snippetName)}
+        />
+      </div>
     </div>
   );
 }
