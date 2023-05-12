@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { BaseDirectory, readDir } from "@tauri-apps/api/fs";
-import { useSnippetStore } from "../storage/SnippetStore";
+import { useSnippetStore } from "../store/SnippetStore";
 
 function SnippetList() {
   const setSnippetsName = useSnippetStore((state) => state.setSnippetsName);
