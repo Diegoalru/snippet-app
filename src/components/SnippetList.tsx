@@ -26,7 +26,7 @@ function SnippetList() {
     <div>
       <h1 className="text-center text-xl font-bold">FILES</h1>
         {snippetNames.map((name) => (
-          <SnippetItem snippetName={name} />
+          <SnippetItem key={name} snippetName={name} />
         ))}
     </div>
   )
