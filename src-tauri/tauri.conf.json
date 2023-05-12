@@ -36,7 +36,7 @@
         "renameFile": false,
         "writeFile": true,
         "scope": [
-          "$DOCUMENT/**/*"
+          "$DOCUMENT/**/**"
         ]
       }
     },
