@@ -2,36 +2,33 @@ import { useSnippetStore } from "../store/SnippetStore";
 import { readTextFile, removeFile } from "@tauri-apps/api/fs";
 import { documentDir } from "@tauri-apps/api/path";
 import { twMerge } from "tailwind-merge";
-import { FiTrash } from "react-icons/fi"
+import { FiTrash } from "react-icons/fi";
 
 interface Props {
   snippetName: string;
 }
 
-async function removeSnippet(snippetName: string) {
-  const accepted = await new Promise((resolve) => {
-    const response = window.confirm(
-      `Are you sure you want to delete ${snippetName}?`
-    );
-    resolve(response);
-  });
-
-  if (!accepted) {
-    return;
-  }
-
-  const getDir = await documentDir();
-  await removeFile(`${getDir}/tauriDocs/${snippetName}`);
-}
-
 function SnippetItem({ snippetName }: Props) {
-  
   const selectedSnippet = useSnippetStore((state) => state.selectedSnippet);
-  const setSelectedSnipped = useSnippetStore(
-    (state) => state.setSelectedSnippet!
-  );
-  const removeSnippet = useSnippetStore((state) => state.removeSnippet);
+  const setSelectedSnipped = useSnippetStore((state) => state.setSelectedSnippet!);
+  const removeSelectedSnippet = useSnippetStore((state) => state.removeSnippet);
 
+  async function removeSnippet(snippetName: string) {
+    const accepted = await new Promise((resolve) => {
+      const response = window.confirm(
+        `Are you sure you want to delete ${snippetName}?`
+      );
+      resolve(response);
+    });
+
+    if (!accepted) {
+      return;
+    }
+
+    const getDir = await documentDir();
+    await removeFile(`${getDir}/tauriDocs/${snippetName}`);
+    removeSelectedSnippet(snippetName);
+  }
 
   return (
     <div
