@@ -5,7 +5,7 @@ import SnippetItem from "./SnippetItem";
 
 function SnippetList() {
   const setSnippetsName = useSnippetStore((state) => state.setSnippetsName);
-  const snippetNames = useSnippetStore((state) => state.snippetsName);
+  const snippetNames = useSnippetStore((state) => state.snippetsName.sort());
 
   async function getSnippetFiles() {
     let files = await readDir(`tauriDocs`, {
