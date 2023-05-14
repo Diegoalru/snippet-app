@@ -1,49 +1,43 @@
-import React, { useState } from "react";
-import { writeFile, exists } from "@tauri-apps/api/fs";
-import { documentDir } from "@tauri-apps/api/path";
-import { toast } from "react-hot-toast";
+import React, {useState} from "react";
+import {documentDir} from "@tauri-apps/api/path";
+import {exists, writeFile} from "@tauri-apps/api/fs";
+import {toast} from "react-hot-toast";
 
 function SnippetForm() {
   const [snippetName, setSnippetName] = useState<string>();
 
   async function submitHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    toast.promise(
-      createSnippet(),
-      {
-        loading: "Creating snippet...",
-        success: "Snippet created!",
-        error: "Error creating snippet",
-      },
-      {
-        duration: 3000,
-        position: "bottom-right",
-        style: {
-          background: "#333",
-          color: "#fff",
-        },
-      }
-    );
+    createSnippet()
+      .then(result => {
+        toast.success("Snippet created successfully");
+      })
+      .catch(error => {
+        toast.error(error);
+      });
   }
 
-  async function createSnippet() {
-    if (!snippetName) {
-      alert("Please enter a snippet name");
-      return;
-    }
+  function createSnippet() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!snippetName) {
+          reject("Snippet name is required");
+        }
 
-    // Verificar que el nombre no exceda los 255 bytes (255 caracteres).
-    if (snippetName!.length > 255) {
-      alert("Snippet name is too long");
-      return;
-    }
+        if (snippetName!.length > 255) {
+          reject("Snippet name is too long");
+        }
 
-    if (await existsFile()) {
-      throw new Error("Snippet already exists");
-    }
+        if (await existsFile()) {
+          reject("File already exists");
+        }
 
-    await createFile();
+        await createFile();
+        resolve("File created successfully");
+      } catch (e) {
+        reject(e);
+      }
+    });
   }
 
   async function createFile() {
@@ -53,8 +47,7 @@ function SnippetForm() {
 
   async function existsFile() {
     let path = await documentDir();
-    let response = await exists(`${path}/tauriDocs/${snippetName}`);
-    return response;
+    return await exists(`${path}/tauriDocs/${snippetName}`);
   }
 
   return (
