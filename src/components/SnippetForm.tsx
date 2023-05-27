@@ -10,7 +10,7 @@ function SnippetForm() {
     event.preventDefault();
     createSnippet()
       .then(result => {
-        toast.success("Snippet created successfully");
+        toast.success(result!.toString());
       })
       .catch(error => {
         toast.error(error);
@@ -29,11 +29,11 @@ function SnippetForm() {
         }
 
         if (await existsFile()) {
-          reject("File already exists");
+          reject("Snippet already exists");
         }
 
         await createFile();
-        resolve("File created successfully");
+        resolve("Snippet created successfully");
       } catch (e) {
         reject(e);
       }
