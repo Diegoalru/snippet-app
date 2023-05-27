@@ -26,17 +26,9 @@
         "all": true
       },
       "fs": {
-        "copyFile": false,
-        "createDir": false,
-        "exists": true,
-        "readDir": true,
-        "readFile": true,
-        "removeDir": false,
-        "removeFile": true,
-        "renameFile": false,
-        "writeFile": true,
+        "all": true,
         "scope": [
-          "$DOCUMENT/**/**"
+          "$DOCUMENT/**/*"
         ]
       }
     },
