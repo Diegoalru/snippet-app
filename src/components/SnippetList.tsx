@@ -4,32 +4,40 @@ import { useSnippetStore } from "../store/SnippetStore";
 import SnippetItem from "./SnippetItem";
 
 function SnippetList() {
-  const setSnippetsName = useSnippetStore((state) => state.setSnippetsName);
-  const snippetNames = useSnippetStore((state) => state.snippetsName.sort());
+  const setSnippetName = useSnippetStore((state) => state.setSnippetName);
+  const snippetNames = useSnippetStore((state) => state.snippetName);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getSnippetFiles().then((files) => {
+        setSnippetName(files);
+      });
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   async function getSnippetFiles() {
     let files = await readDir(`tauriDocs`, {
-      recursive: true,
       dir: BaseDirectory.Document,
     });
 
-    const snippetNamesArray = files.map((file) => file.name!);
-    
-    setSnippetsName(snippetNamesArray);
+    return files
+      .map((file) => file.name!)
+      .filter((file) => file !== "tauriDocs");
   }
-
-  useEffect(() => {
-    getSnippetFiles();
-  }, [setTimeout(() => {}, 3000)]);
 
   return (
     <div>
       <h1 className="text-center text-xl font-bold">FILES</h1>
-        {snippetNames.map((name) => (
-          <SnippetItem key={name} snippetName={name} />
-        ))}
+      {snippetNames.map(
+        (
+          name // Se recorre el array de nombres de archivos.
+        ) => (
+          <SnippetItem key={name} snippetName={name} /> // Se le pasa el nombre del archivo.
+        )
+      )}
     </div>
-  )
+  );
 }
 
 export default SnippetList;
