@@ -39,10 +39,13 @@ function SnippetItem({ snippetName }: Props) {
           : ""
       )}
       onClick={async () => {
+        setSelectedSnipped(null);
+
         const getDir = await documentDir();
         const snippetText = await readTextFile(
           `${getDir}/tauriDocs/${snippetName}`
         );
+        
         setSelectedSnipped({ name: snippetName, code: snippetText });
       }}
     >
@@ -50,7 +53,7 @@ function SnippetItem({ snippetName }: Props) {
         <h1 className="text-lg font-semibold">{snippetName}</h1>
         <FiTrash
           className="ml-auto text-sm hover:text-red-500 hover:cursor-pointer transition duration-300 ease-in-out"
-          onClick={() => removeSnippet(snippetName)}
+          onClick={async () => await removeSnippet(snippetName)}
         />
       </div>
     </div>
