@@ -29,13 +29,9 @@ function SnippetList() {
   return (
     <div>
       <h1 className="text-center text-xl font-bold">FILES</h1>
-      {snippetNames.map(
-        (
-          name // Se recorre el array de nombres de archivos.
-        ) => (
-          <SnippetItem key={name} snippetName={name} /> // Se le pasa el nombre del archivo.
-        )
-      )}
+      {snippetNames.map((name) => (
+        <SnippetItem key={name} snippetName={name} /> // Se le pasa el nombre del archivo.
+      ))}
     </div>
   );
 }
